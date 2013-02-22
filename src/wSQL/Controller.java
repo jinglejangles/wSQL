@@ -1,6 +1,9 @@
 package wSQL;
 import java.awt.event.ActionEvent;
 
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+
 
 public class Controller implements java.awt.event.ActionListener{
 	myView view;
@@ -13,8 +16,13 @@ public class Controller implements java.awt.event.ActionListener{
 	public void setModel(myModel model){
 		this.model = model;
 	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-			System.out.println("SUP NIGGA");
+		if (e.getActionCommand()=="Connect"){	
+			
+		}else{
+			System.out.println("PROBLEM?");
+		}
 	}
 }
