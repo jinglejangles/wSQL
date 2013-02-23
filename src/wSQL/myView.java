@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -22,24 +23,21 @@ public class myView extends JFrame implements
 	java.util.Observer,WindowListener {
 	
 	private static final long serialVersionUID = 1L;
-	//final static boolean shouldFill = true;
-    //final static boolean shouldWeightX = true;
-    //final static boolean RIGHT_TO_LEFT = false;
-    
-    JButton b;
+    private JButton b;
     private JTextField hostname;
     private JTextField username;
     private JPasswordField password;
-	JMenu about;
+	private JMenu about;
+	private JPanel myPanel;
+	
     @Override
 	public void update(Observable o, Object arg) {
-		if (arg instanceof connectedView){
-		
-		}		
+		if(arg instanceof JPanel){
+			myPanel = (JPanel)arg;
+		}
 	}
 	//Constructor for myView
 	myView(){
-		//super
 		super("SQLVIEW");
 		addWindowListener(this);
 		 try {
@@ -53,7 +51,7 @@ public class myView extends JFrame implements
 							SwingUtilities.isEventDispatchThread());
 					
 					setJMenuBar(createMenuBar());
-					addContent(getContentPane());
+					add(addPanel());
 					//current default close operation
 					//will change when a pop up menu is implemented 
 					//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,6 +68,10 @@ public class myView extends JFrame implements
 			e.printStackTrace();
 		}	
 		 
+		 //test functions for removal of current showing panel
+		 remove(myPanel);
+		 revalidate();
+		 repaint();
 	}
 	
 	
@@ -78,91 +80,51 @@ public class myView extends JFrame implements
 	}
 	
 	/*
-	 * @Func:		addContent
-	 * @param  		content pane 
-	 * @Desc:		adds the initial content to the pane for the starting view
+	 * @Func:		addPanel
+	 * @param  		none 
+	 * @Desc:		adds the initial content to the JPanel for the starting view
 	 * 				The starting view contains labels and text areas for the 
 	 * 				hostname/ip, login , and password
 	 * 
 	 */
 	
-	private void addContent(Container pane){
-		
-		/*if (RIGHT_TO_LEFT) {
-			//pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-		}*/
-		JMenuBar menuBar = new JMenuBar();
-		about = new JMenu("About");
-		menuBar.add(about);
-	    pane.setLayout(new FlowLayout());
-	    GridBagConstraints c = new GridBagConstraints();
+	private JPanel addPanel(){
 	    
-	    /*
-	    if (shouldFill) {
-	    	//natural height, maximum width
-	    	//c.fill = GridBagConstraints.HORIZONTAL;
-	    }*/
+		myPanel = new JPanel();
+		myPanel.setLayout(new FlowLayout());
+		GridBagConstraints c = new GridBagConstraints();
 	    
-	    //Hostname Label creation
-	    
+	    //Hostname Section creation
 	    JLabel myLabel = new JLabel("Hostname: ");
-	    //c.weightx = 0.1;
-	    //c.fill = GridBagConstraints.HORIZONTAL;
-	    //c.gridx = 0;
-	    //c.gridy = 0;
-	    //c.insets = new Insets(1,1,1,1);
-	    pane.add(myLabel,c);   
-
-	    //Textarea for Hostname input
-	    
+	    myPanel.add(myLabel);
 	    hostname = new JTextField();
-	    //hostname.setMinimumSize(new Dimension(10,10));
-	    //hostname.setMaximumSize(new Dimension(10,10));
 	    hostname.setColumns(20);
-	    pane.add(hostname, c);
+	    myPanel.add(hostname);
 	 
-	    //Label for username
-	    
+	    //Username Section creation
 	    JLabel myLabel2 = new JLabel("UserName: ");
-	    pane.add(myLabel2);
-	    
-	    //Text area for username input
-	    
+	    myPanel.add(myLabel2);
 	    username = new JTextField();
 	    username.setColumns(20);
-	    pane.add(username, c);
-	 
-	    //Label for Password
+	    myPanel.add(username);
+	    
+	    //Password Section creation
 	    JLabel myLabel3 = new JLabel("Password:");
-	    //c.insets = new Insets(2,2,2,2);
-	    //c.weightx = 0.5;
-	    //c.fill = GridBagConstraints.HORIZONTAL;
-	    //c.gridx = 0;
-	    //c.gridy = 2;	   
-	    pane.add(myLabel3,c);
-	    
-	    
-	    //Textfield entry for password
-	    
+	    myPanel.add(myLabel3);
 	    password = new JPasswordField();
-	    //c.fill = GridBagConstraints.HORIZONTAL;    
-	    //c.weightx = 0.0;
-	    //c.gridwidth = 3;
-	    //c.gridx = 1;
-	    //c.gridy = 2;
 	    password.setColumns(20);
-	    pane.add(password, c);
+	    myPanel.add(password);
 	    
-	    //Attempt to Connect Button
+	    //Button for connecting to database
 	    b = new JButton("Connect");
-	    pane.add(b, c);
+	    myPanel.add(b);
+	    
 	    
 	    /**TODO add a text label below button to signify that you 
 	     * 		are trying to connect
 	     */
-		
-	    //System.out.println("Are we on the EDT? " + 
-	    //SwingUtilities.isEventDispatchThread());	
+	    
+	    return myPanel;
 	}
 		
 
@@ -207,6 +169,13 @@ public class myView extends JFrame implements
 	public String getPass(){
 		return new String(password.getPassword());
 	}
+	/*
+	 * @Function:	getJMenu()
+	 * @param:		none
+	 * @Desc:		returns the about JMenu option used in conjunction with a
+	 * 				listener so a pop up box will appear containing information
+	 * 				about the program
+	 */
 	
 	public JMenu getJMenu(){
 		return about;
@@ -215,7 +184,7 @@ public class myView extends JFrame implements
 	/*
 	 * @Function:	createMenuBar()
 	 * @paramL		None
-	 * @Desc:		Returns the initial JMenuBar in use with j 
+	 * @Desc:		Returns the initial JMenuBar for the view 
 	 */
 	
 	private JMenuBar createMenuBar(){
@@ -229,16 +198,15 @@ public class myView extends JFrame implements
 		return myMenu;
 	}
 	
-	/*
-	 * Extended JFrame override functions not used within the program 
-	 */
-	
-	public void windowActivated(WindowEvent arg0){}
 	public void windowClosing(WindowEvent arg0) {
 		System.out.println("Goodbye");
 		this.dispose();
 		System.exit(0);
 	}
+	/*
+	 * Extended JFrame override functions not used within the program 
+	 */
+	public void windowActivated(WindowEvent arg0){}
 	public void windowDeactivated(WindowEvent arg0) {}
 	public void windowDeiconified(WindowEvent arg0) {}
 	public void windowOpened(WindowEvent arg0) {}

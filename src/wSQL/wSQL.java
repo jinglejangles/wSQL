@@ -13,6 +13,6 @@ public class wSQL {
 		m.addObserver(v);
 		v.addController(c);
 		c.setView(v);
-	
+		c.setModel(m);
 	}
 }

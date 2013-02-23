@@ -20,7 +20,9 @@ public class Controller implements java.awt.event.ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand()=="Connect"){	
-			
+			System.out.println("Attempting to Connect:");
+			if (model.attemptConnect(view.getHostName(),view.getUserName(),view.getPass()));
+			System.out.println("Changing view");
 		}else{
 			System.out.println("PROBLEM?");
 		}
