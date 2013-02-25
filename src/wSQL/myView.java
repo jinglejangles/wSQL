@@ -69,9 +69,11 @@ public class myView extends JFrame implements
 		}	
 		 
 		 //test functions for removal of current showing panel
-		 remove(myPanel);
-		 revalidate();
-		 repaint();
+		 
+		 
+		 //remove(myPanel);
+		 //revalidate();
+		 //repaint();
 	}
 	
 	
