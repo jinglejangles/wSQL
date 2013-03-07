@@ -1,47 +1,61 @@
 package wSQL;
 import java.util.Observable;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
 import java.sql.*;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
 public class myModel extends Observable{
-	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-	static final String DB_URL = "jdbc:mysql//student.cs.appstate.edu";
+	
+	private DBConImpl db;
+	private JPanel modelPanel;
 	
 	public void hello(){
 		this.setChanged();
 		this.notifyObservers();
 	}
 	
-	public boolean attemptConnect(String hostName, String userName, String pass) {
-		System.out.println("I got some" + hostName + "plus some " + userName + "secrectstuff " + pass);
-		Connection conn = null;
-		Statement stmt = null;
-		 
-		  
-			 try {
+	public void attemptConnect(String hostName, String userName, String pass) {
+		db.setHostname(hostName);
+		db.setUsername(userName);
+		db.setPass(pass);
+		if(db.attemptConnect()){
+			buildConnectedPanel();
+		}else{
+			
+		}
+		
+	}
+	public myModel() {
+		db = new DBConImpl();
+	}
 
-			        System.out.println("Create the driver instance.<br>");
-			        Class.forName("com.mysql.jdbc.Driver").newInstance();
-
-			        System.out.println("Get the connection.<br>");
-			        conn = DriverManager.getConnection("jdbc:mysql://"+ hostName + ":3306/3430", userName, pass);
-			        stmt = conn.createStatement();
-			        String sql = "SELECT * FROM lin";
-			        ResultSet rs = stmt.executeQuery(sql);
-			        while(rs.next()){
-			        	String uname = rs.getString(1);
-			        	String enc = rs.getString(2);
-			        	int valid = rs.getInt(3);
-			        	System.out.println(uname + " " + enc + " " + valid);
-			        }
-			        
-
-			        //...
-			    } catch (Exception e)
-			    {
-			        System.out.println(e.toString()+"<br>");
-			        e.printStackTrace();
-			        System.exit(0);
-			    }
-		return true;
+	public void runQuery() {
+		// TODO Auto-generated method stub
+		
+	}
+	private void buildConnectedPanel(){
+		modelPanel = new JPanel();
+		modelPanel.setLayout(new FlowLayout());
+		GridBagConstraints c = new GridBagConstraints();
+	    
+	    //Hostname Section creation
+	    JLabel myLabel = new JLabel("Connected to " + db.getHostname() + " under user: " + db.getUsername());
+	    modelPanel.add(myLabel);
+	   
+	    JTextArea myTextArea = new JTextArea("THIS IS THE TEXT AREA");
+	    myTextArea.setRows(20);
+	    myTextArea.setColumns(50);
+	    myTextArea.setEditable(false);
+	    modelPanel.add(myTextArea);
+	    JTextField hostname = new JTextField();
+	    hostname.setColumns(20);
+	    modelPanel.add(hostname);
+		this.setChanged();
+		this.notifyObservers(modelPanel);
 	}
 }

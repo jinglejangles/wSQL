@@ -31,14 +31,41 @@ public class myView extends JFrame implements
 	private JPanel myPanel;
 	
     @Override
+    /*
+	 * @Func:		update
+	 * @param  		Observable o, Object arg 
+	 * @Desc:		function called when the GUI needs to be notified of a recent event 
+	 * 
+	 */
 	public void update(Observable o, Object arg) {
 		if(arg instanceof JPanel){
-			myPanel = (JPanel)arg;
-		}
-	}
+			myPanel = (JPanel)arg; 
+			myPanel.add(b);
+			b.setText("RunQuery");
+			try{
+				
+		
+			SwingUtilities.invokeLater(new Runnable(){
+				public void run(){
+					getContentPane().removeAll();
+					getContentPane().add(myPanel);
+					setResizable(true);
+					setSize(700, 500);
+					revalidate();
+					repaint();	
+				}
+			});
+			}finally{
+				
+				
+			}
+		}	
+    }
+		
+    
 	//Constructor for myView
 	myView(){
-		super("SQLVIEW");
+		super("wSQL");
 		addWindowListener(this);
 		 try {
 			 //invoke and wait for creating the initial view
@@ -67,13 +94,6 @@ public class myView extends JFrame implements
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}	
-		 
-		 //test functions for removal of current showing panel
-		 
-		 
-		 //remove(myPanel);
-		 //revalidate();
-		 //repaint();
 	}
 	
 	
@@ -94,7 +114,6 @@ public class myView extends JFrame implements
 	    
 		myPanel = new JPanel();
 		myPanel.setLayout(new FlowLayout());
-		GridBagConstraints c = new GridBagConstraints();
 	    
 	    //Hostname Section creation
 	    JLabel myLabel = new JLabel("Hostname: ");
